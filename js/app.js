@@ -13,8 +13,18 @@ new Vue({
       this.reset();
     },
     reset: function () {
+      // Sets the player's health back to 100
       this.playerHealth = 100;
+      // Sets the monster's health back to 100
       this.monsterHealth = 100;
+    },
+    attack: function () {
+      console.log('ATTACK');
+      console.log(this.getRandomNumber(5, 13));
+    },
+    getRandomNumber: function (min, max) {
+      // Get a number between min (inclusive) and max (exclusive)
+      return Math.floor(Math.random() * (max - min) + min);
     }
   },
   computed: {
