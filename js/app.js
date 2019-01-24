@@ -27,6 +27,8 @@ new Vue({
       this.monsterHealth = 100;
       // Sets the battle log to an empty array
       this.battleLog = [];
+      // Sets isGameOver 
+      this.isGameOver = false;
     },
     attack: function () {
       // 1. Generates a random attack number for the player and the monster
