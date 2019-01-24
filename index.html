@@ -44,7 +44,7 @@
       <div class="small-12 columns">
         <button :disabled="isGameOver" id="attack" @click="attack">ATTACK</button>
         <button :disabled="isGameOver" id="special-attack" @click="specialAttack">SPECIAL ATTACK</button>
-        <button :disabled="isGameOver" id="heal">HEAL</button>
+        <button :disabled="isGameOver" id="heal" @click="heal">HEAL</button>
         <button :disabled="isGameOver" id="give-up">GIVE UP</button>
       </div>
     </section>
@@ -58,7 +58,7 @@
               {{ log.character }} hits {{ log.character === 'player' ? 'monster' : 'player' }} for {{ log.number }} dmg
             </template>
             <template v-else>
-              {{ log.character }} heals for {{ log.number }} hp
+              {{ log.character }} heals for {{ settings.healAmount }} hp
             </template>
           </li>
 

@@ -14,7 +14,8 @@ new Vue({
       specialAttack: {
         minDmg: 10,
         maxDmg: 23
-      }
+      },
+      healAmount: 10
     }
   },
   methods: {
@@ -40,8 +41,7 @@ new Vue({
       const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
 
       // 2. Reduce the dmg done by the character
-      this.playerHealth -= monsterDmg;
-      this.monsterHealth -= playerDmg;
+      this.updateHealth({ playerDmg, monsterDmg });
 
       // 3. Update the battle log
       this.updateBattleLog({
@@ -59,8 +59,7 @@ new Vue({
       const monsterDmg = this.getRandomNumber(this.settings.specialAttack.minDmg, this.settings.specialAttack.maxDmg);
 
       // 2. Reduce the dmg done by the character
-      this.playerHealth -= monsterDmg;
-      this.monsterHealth -= playerDmg;
+      this.updateHealth({ playerDmg, monsterDmg });
 
       // 3. Update the battle log
       this.updateBattleLog({
@@ -71,6 +70,29 @@ new Vue({
 
       // 4. Check if any HP is under 0
       this.checkIfGameIsOver();
+    },
+    heal: function () {
+      // 1. Generate a monster damage amount while the player heals
+      const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
+      const { healAmount } = this.settings;
+
+      // 2. update the health values
+      this.updateHealth({ playerDmg: 0, monsterDmg });
+
+      // 3. Heal the player
+      this.playerHealth += healAmount;
+
+      // 4. Update the battle log
+      this.updateBattleLog({
+        type: 'heal',
+        playerDmg: 0,
+        monsterDmg: monsterDmg
+      });
+
+    },
+    updateHealth: function ({ playerDmg, monsterDmg }) {
+      this.playerHealth -= monsterDmg;
+      this.monsterHealth -= playerDmg;
     },
     checkIfGameIsOver: function () {
       if ((this.monsterHealth <= 0 && this.playerHealth <= 0) && this.monsterHealth === this.playerHealth) { // Its a tie!
@@ -101,6 +123,21 @@ new Vue({
           character: 'player',
           isAttacking: true,
           number: playerDmg
+        };
+        // Adds the logs to the list
+        this.battleLog.unshift(monsterLog);
+        this.battleLog.unshift(playerLog);
+      } else if (type === 'heal') {
+        // Creates the log for the monster
+        const monsterLog = {
+          character: 'monster',
+          isAttacking: true,
+          number: monsterDmg
+        };
+        // Creates the log for the player
+        const playerLog = {
+          character: 'player',
+          isAttacking: false,
         };
         // Adds the logs to the list
         this.battleLog.unshift(monsterLog);
