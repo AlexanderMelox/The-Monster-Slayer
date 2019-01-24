@@ -45,10 +45,11 @@
       <div class="small-12 columns">
         <h2 class="battle-log text-center">Battle Log</h2>
         <ul class="battle-log-list">
-          <!--  
-          <li class="monster-turn">
-            Monster hits player for 12 dmg
-          </li> -->
+
+          <li v-for="action in log" :class="`${action.character}-turn`">
+            {{ action.character }} {{ action.action }} for {{ action.number }} {{ action.action === 'hits' ? 'dmg' :
+            hp }}
+          </li>
 
         </ul>
       </div>
