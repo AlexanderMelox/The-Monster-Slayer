@@ -73,7 +73,7 @@ new Vue({
     },
     heal: function () {
       // 1. Generate a monster damage amount while the player heals
-      const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg + 3, this.settings.attack.maxDmg + 3);
+      const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
       const { healAmount } = this.settings;
 
       // 2. update the health values
