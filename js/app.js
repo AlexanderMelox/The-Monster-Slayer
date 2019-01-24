@@ -90,6 +90,13 @@ new Vue({
       });
 
     },
+    giveUp: function () {
+      const giveUp = confirm('Are you sure?');
+      if (giveUp) {
+        alert('You lost!');
+        this.startGame();
+      }
+    },
     updateHealth: function ({ playerDmg, monsterDmg }) {
       this.playerHealth -= monsterDmg;
       this.monsterHealth -= playerDmg;
