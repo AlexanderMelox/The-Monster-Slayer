@@ -53,7 +53,8 @@
         <h2 class="battle-log text-center">Battle Log</h2>
         <ul class="battle-log-list">
 
-          <li v-for="log in battleLog" :class="log.character + '-turn'">
+          <li v-for="(log, index) in battleLog" :class="log.character + '-turn'">
+            Turn: {{ (battleLog.length / 2) }}
             <template v-if="log.isAttacking">
               {{ log.character }} hits {{ log.character === 'player' ? 'monster' : 'player' }} for {{ log.number }} dmg
             </template>
