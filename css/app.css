@@ -158,4 +158,5 @@ button[disabled] {
 
 .gameover {
     color: red;
+    margin-bottom: 0;
 }

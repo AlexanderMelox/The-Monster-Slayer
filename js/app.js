@@ -10,6 +10,10 @@ new Vue({
       attack: {
         minDmg: 3,
         maxDmg: 13
+      },
+      specialAttack: {
+        minDmg: 10,
+        maxDmg: 23
       }
     }
   },
@@ -49,8 +53,30 @@ new Vue({
       // 4. Check if any HP is under 0
       this.checkIfGameIsOver();
     },
+    specialAttack: function () {
+      // 1. Generate a random special attack number for the player and the monster
+      const playerDmg = this.getRandomNumber(this.settings.specialAttack.minDmg, this.settings.specialAttack.maxDmg);
+      const monsterDmg = this.getRandomNumber(this.settings.specialAttack.minDmg, this.settings.specialAttack.maxDmg);
+
+      // 2. Reduce the dmg done by the character
+      this.playerHealth -= monsterDmg;
+      this.monsterHealth -= playerDmg;
+
+      // 3. Update the battle log
+      this.updateBattleLog({
+        type: 'attack',
+        playerDmg: playerDmg,
+        monsterDmg: monsterDmg
+      });
+
+      // 4. Check if any HP is under 0
+      this.checkIfGameIsOver();
+    },
     checkIfGameIsOver: function () {
-      if (this.monsterHealth <= 0) { // 1. Check if the monster's health is <= 0
+      if ((this.monsterHealth <= 0 && this.playerHealth <= 0) && this.monsterHealth === this.playerHealth) { // Its a tie!
+        const playAgain = confirm('You both died! Try again?');
+        playAgain ? this.startGame() : this.isGameOver = true;
+      } else if (this.monsterHealth <= 0) { // 1. Check if the monster's health is <= 0
         // 1.1 Checks if the player wants to play again
         const playAgain = confirm('You slain the monster! Play again?');
         // 1.2 If the player confirms then the game starts again, if not sets the game into the game over state
@@ -62,10 +88,7 @@ new Vue({
         playAgain ? this.startGame() : this.isGameOver = true;
       }
     },
-    updateBattleLog: function (options) {
-      // Destructures all props in options
-      const { type, playerDmg, monsterDmg } = options;
-      // Checks if the type of move is an attack
+    updateBattleLog: function ({ type, playerDmg, monsterDmg }) {
       if (type === 'attack') {
         // Creates the log for the monster
         const monsterLog = {
@@ -83,6 +106,10 @@ new Vue({
         this.battleLog.unshift(monsterLog);
         this.battleLog.unshift(playerLog);
       }
+    },
+    playAgain: function (message) {
+      const playAgain = confirm(message);
+      playAgain ? this.startGame() : this.isGameOver = true;
     },
     getRandomNumber: function (min, max) {
       // Get a number between min (inclusive) and max (exclusive)

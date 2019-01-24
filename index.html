@@ -30,14 +30,19 @@
     </section>
     <section v-if="!isPlaying || isGameOver" class="row controls">
       <div class="small-12 columns">
-        <h1 class="gameover" v-show="isGameOver">GAME OVER</h1>
+        <h1 class="gameover" v-show="isGameOver">
+          GAME OVER
+        </h1>
+        <h3 v-if="monsterHealth > playerHealth">Monster won! >:)</h3>
+        <h3 v-if="monsterHealth < playerHealth">You won! :)</h3>
+
         <button id="start-game" @click="startGame">START NEW GAME</button>
       </div>
     </section>
     <section v-if="isPlaying" class="row controls">
       <div class="small-12 columns">
         <button :disabled="isGameOver" id="attack" @click="attack">ATTACK</button>
-        <button :disabled="isGameOver" id="special-attack">SPECIAL ATTACK</button>
+        <button :disabled="isGameOver" id="special-attack" @click="specialAttack">SPECIAL ATTACK</button>
         <button :disabled="isGameOver" id="heal">HEAL</button>
         <button :disabled="isGameOver" id="give-up">GIVE UP</button>
       </div>
