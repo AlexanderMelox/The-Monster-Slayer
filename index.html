@@ -14,7 +14,7 @@
       <div class="small-6 columns">
         <h1 class="text-center">YOU</h1>
         <div class="healthbar">
-          <div class="healthbar__inner text-center" :style="playerHealthBarStyles">
+          <div :style="playerHealthBarStyles" class="healthbar__inner text-center">
             <span class="healthbar__number">{{ playerHealth }}</span>
           </div>
         </div>
@@ -28,17 +28,18 @@
         </div>
       </div>
     </section>
-    <section v-if="!isPlaying" class="row controls">
+    <section v-if="!isPlaying || isGameOver" class="row controls">
       <div class="small-12 columns">
+        <h1 class="gameover" v-show="isGameOver">GAME OVER</h1>
         <button id="start-game" @click="startGame">START NEW GAME</button>
       </div>
     </section>
     <section v-if="isPlaying" class="row controls">
       <div class="small-12 columns">
-        <button id="attack" @click="attack">ATTACK</button>
-        <button id="special-attack">SPECIAL ATTACK</button>
-        <button id="heal">HEAL</button>
-        <button id="give-up">GIVE UP</button>
+        <button :disabled="isGameOver" id="attack" @click="attack">ATTACK</button>
+        <button :disabled="isGameOver" id="special-attack">SPECIAL ATTACK</button>
+        <button :disabled="isGameOver" id="heal">HEAL</button>
+        <button :disabled="isGameOver" id="give-up">GIVE UP</button>
       </div>
     </section>
     <section class="row log">
@@ -46,9 +47,13 @@
         <h2 class="battle-log text-center">Battle Log</h2>
         <ul class="battle-log-list">
 
-          <li v-for="action in log" :class="`${action.character}-turn`">
-            {{ action.character }} {{ action.action }} for {{ action.number }} {{ action.action === 'hits' ? 'dmg' :
-            hp }}
+          <li v-for="log in battleLog" :class="log.character + '-turn'">
+            <template v-if="log.isAttacking">
+              {{ log.character }} hits {{ log.character === 'player' ? 'monster' : 'player' }} for {{ log.number }} dmg
+            </template>
+            <template v-else>
+              {{ log.character }} heals for {{ log.number }} hp
+            </template>
           </li>
 
         </ul>

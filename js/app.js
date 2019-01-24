@@ -4,11 +4,8 @@ new Vue({
     isPlaying: false,
     playerHealth: 100,
     monsterHealth: 100,
-    log: [{
-      character: 'player',
-      action: 'hits',
-      number: 12
-    }],
+    battleLog: [],
+    isGameOver: false,
     settings: {
       attack: {
         minDmg: 3,
@@ -29,26 +26,60 @@ new Vue({
       // Sets the monster's health back to 100
       this.monsterHealth = 100;
       // Sets the battle log to an empty array
-      this.log = [];
+      this.battleLog = [];
     },
     attack: function () {
       // 1. Generates a random attack number for the player and the monster
       const playerDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
       const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
+
       // 2. Reduce the dmg done by the character
       this.playerHealth -= monsterDmg;
       this.monsterHealth -= playerDmg;
+
       // 3. Update the battle log
       this.updateBattleLog({
         type: 'attack',
-        player: playerDmg,
-        monster: monsterDmg
+        playerDmg: playerDmg,
+        monsterDmg: monsterDmg
       });
+
+      // 4. Check if any HP is under 0
+      this.checkIfGameIsOver();
+    },
+    checkIfGameIsOver: function () {
+      if (this.monsterHealth <= 0) { // 1. Check if the monster's health is <= 0
+        // 1.1 Checks if the player wants to play again
+        const playAgain = confirm('You slain the monster! Play again?');
+        // 1.2 If the player confirms then the game starts again, if not sets the game into the game over state
+        playAgain ? this.startGame() : this.isGameOver = true;
+      } else if (this.playerHealth <= 0) { // 2. Check if the player's health is <= 0
+        // 2.1 Checks if the player wants to play again
+        const playAgain = confirm('YOU DIED. Try again?');
+        // 2.2 If the player confirms then the game starts again, if not sets the game into the game over state
+        playAgain ? this.startGame() : this.isGameOver = true;
+      }
     },
     updateBattleLog: function (options) {
-      const { type } = options;
+      // Destructures all props in options
+      const { type, playerDmg, monsterDmg } = options;
+      // Checks if the type of move is an attack
       if (type === 'attack') {
-        console.log(type);
+        // Creates the log for the monster
+        const monsterLog = {
+          character: 'monster',
+          isAttacking: true,
+          number: monsterDmg
+        };
+        // Creates the log for the player
+        const playerLog = {
+          character: 'player',
+          isAttacking: true,
+          number: playerDmg
+        };
+        // Adds the logs to the list
+        this.battleLog.unshift(monsterLog);
+        this.battleLog.unshift(playerLog);
       }
     },
     getRandomNumber: function (min, max) {
