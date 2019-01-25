@@ -9,11 +9,11 @@ new Vue({
     settings: {
       attack: {
         minDmg: 3,
-        maxDmg: 13
+        maxDmg: 10
       },
       specialAttack: {
         minDmg: 10,
-        maxDmg: 23
+        maxDmg: 20
       },
       healAmount: 10
     }
@@ -38,7 +38,7 @@ new Vue({
     attack: function () {
       // 1. Generates a random attack number for the player and the monster
       const playerDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
-      const monsterDmg = this.getRandomNumber(this.settings.attack.minDmg, this.settings.attack.maxDmg);
+      const monsterDmg = this.getRandomNumber(5, 12);
 
       // 2. Reduce the dmg done by the character
       this.updateHealth({ playerDmg, monsterDmg });
@@ -56,7 +56,7 @@ new Vue({
     specialAttack: function () {
       // 1. Generate a random special attack number for the player and the monster
       const playerDmg = this.getRandomNumber(this.settings.specialAttack.minDmg, this.settings.specialAttack.maxDmg);
-      const monsterDmg = this.getRandomNumber(this.settings.specialAttack.minDmg, this.settings.specialAttack.maxDmg);
+      const monsterDmg = this.getRandomNumber(5, 30);
 
       // 2. Reduce the dmg done by the character
       this.updateHealth({ playerDmg, monsterDmg });
